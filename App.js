@@ -1,5 +1,5 @@
 import React from 'react';
-import Navigation from '../ToDoApp/screens/Navigation';
+import Navigation from './screens/Navigation';
 import 'react-native-gesture-handler';
 
 const App = () => {
