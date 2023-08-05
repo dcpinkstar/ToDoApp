@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal } from 'react-native';
-
-import MyModal from '../Modal/MyModal';
+import MyModal from './MyModal';
 
 const HomeScreen = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [newTaskFrequency, setNewTaskFrequency] = useState('');
 
   const handleAddTask = () => {
     if (newTask.trim() !== '') {
-      setTasks([...tasks, { title: newTask, completed: false }]);
+      setIsModalVisible(true);
+    }
+  };
+
+  const handleAddTaskWithFrequency = (frequency) => {
+    if (newTask.trim() !== '') {
+      setTasks([...tasks, { title: newTask, frequency, completed: false }]);
       setNewTask('');
+      setNewTaskFrequency('');
+      setIsModalVisible(false);
     }
   };
 
@@ -25,10 +33,6 @@ const HomeScreen = () => {
     const updatedTasks = [...tasks];
     updatedTasks.splice(index, 1);
     setTasks(updatedTasks);
-  };
-
-  const openModal = () => {
-    setIsModalVisible(true);
   };
 
   const closeModal = () => {
@@ -46,7 +50,6 @@ const HomeScreen = () => {
           placeholder="Add a new task"
           value={newTask}
           onChangeText={setNewTask}
-          onSubmitEditing={handleAddTask}
         />
         <TouchableOpacity style={styles.addButton} onPress={handleAddTask}>
           <Text style={styles.addButtonText}>Add</Text>
@@ -70,36 +73,21 @@ const HomeScreen = () => {
         </View>
       ))}
 
-      {/* Open Modal Button */}
-      <TouchableOpacity style={styles.modalButton} onPress={openModal}>
-        <Text style={styles.modalButtonText}>Open Modal</Text>
-      </TouchableOpacity>
-
       {/* Modal */}
-      <Modal visible={isModalVisible} transparent>
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Task Frequency</Text>
-            <TouchableOpacity style={styles.modalOption} onPress={() => closeModal()}>
-              <Text>Daily</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalOption} onPress={() => closeModal()}>
-              <Text>Weekly</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalOption} onPress={() => closeModal()}>
-              <Text>Monthly</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <MyModal
+        isVisible={isModalVisible}
+        closeModal={closeModal}
+        handleAddTaskWithFrequency={handleAddTaskWithFrequency}
+      />
     </View>
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: 20,
